@@ -21,12 +21,12 @@
 - hosts: all
   become: yes
   vars:
-      node_exporter_version: "{{ node_exporter_version_param | default(latest_version) }}"
+      prometheus_version: "{{ prometheus_version_param | default(latest_version) }}"
 
   tasks:
-      - name: Get the latest version of Node Exporter from GitHub
+      - name: Get the latest version of Prometheus from GitHub
         ansible.builtin.uri:
-            url: https://api.github.com/repos/prometheus/node_exporter/releases/latest
+            url: https://api.github.com/repos/prometheus/prometheus/releases/latest
             return_content: yes
         register: github_release
 
@@ -34,40 +34,40 @@
         ansible.builtin.set_fact:
             latest_version: "{{ github_release.json.tag_name | regex_replace('^v', '') }}"
 
-      - name: Download Prometheus Node Exporter
+      - name: Download Prometheus binary tarball
         ansible.builtin.get_url:
-            url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
-            dest: /tmp/node_exporter.tar.gz
+            url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+            dest: /tmp/prometheus.tar.gz
 
-      - name: Extract Node Exporter to /tmp
+      - name: Extract Prometheus to /tmp
         ansible.builtin.unarchive:
-            src: /tmp/node_exporter.tar.gz
+            src: /tmp/prometheus.tar.gz
             dest: /tmp/
             remote_src: yes
-            creates: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64"
+            creates: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64"
 
-      - name: Copy node_exporter binary to /usr/local/bin
+      - name: Copy Prometheus binary to /usr/local/bin
         ansible.builtin.copy:
-            src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter"
-            dest: "/usr/local/bin/node_exporter"
+            src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus"
+            dest: "/usr/local/bin/prometheus"
             mode: '0755'
 
-      - name: Copy node_exporter.service to the remote server
+      - name: Copy existing Prometheus service file
         ansible.builtin.copy:
-            src: ./node_exporter.service
-            dest: /etc/systemd/system/node_exporter.service
+            src: "{{ playbook_dir }}/prometheus.service"
+            dest: /etc/systemd/system/prometheus.service
             mode: '0644'
 
       - name: Reload systemd
         ansible.builtin.systemd:
             daemon_reload: yes
 
-      - name: Start the Node Exporter service
+      - name: Start Prometheus service
         ansible.builtin.systemd:
-            name: node_exporter
+            name: prometheus
             state: started
 
-      - name: Enable Node Exporter service at boot
+      - name: Enable Prometheus service at boot
         ansible.builtin.systemd:
-            name: node_exporter
+            name: prometheus
             enabled: yes
