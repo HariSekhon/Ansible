@@ -1,0 +1,73 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2024-10-09 02:50:05 +0300 (Wed, 09 Oct 2024)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https///github.com/HariSekhon/Ansible
+#
+#  License: see accompanying Hari Sekhon LICENSE file
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#                P r o m e t h e u s   N o d e   E x p o r t e r
+# ============================================================================ #
+
+---
+- hosts: all
+  become: yes
+  vars:
+      node_exporter_version: "{{ node_exporter_version_param | default(latest_version) }}"
+
+  tasks:
+      - name: Get the latest version of Node Exporter from GitHub
+        ansible.builtin.uri:
+            url: https://api.github.com/repos/prometheus/node_exporter/releases/latest
+            return_content: yes
+        register: github_release
+
+      - name: Set the latest version
+        ansible.builtin.set_fact:
+            latest_version: "{{ github_release.json.tag_name | regex_replace('^v', '') }}"
+
+      - name: Download Prometheus Node Exporter
+        ansible.builtin.get_url:
+            url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+            dest: /tmp/node_exporter.tar.gz
+
+      - name: Extract Node Exporter to /tmp
+        ansible.builtin.unarchive:
+            src: /tmp/node_exporter.tar.gz
+            dest: /tmp/
+            remote_src: yes
+            creates: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64"
+
+      - name: Copy node_exporter binary to /usr/local/bin
+        ansible.builtin.copy:
+            src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter"
+            dest: "/usr/local/bin/node_exporter"
+            mode: '0755'
+
+      - name: Copy node_exporter.service to the remote server
+        ansible.builtin.copy:
+            src: ./node_exporter.service
+            dest: /etc/systemd/system/node_exporter.service
+            mode: '0644'
+
+      - name: Reload systemd
+        ansible.builtin.systemd:
+            daemon_reload: yes
+
+      - name: Start the Node Exporter service
+        ansible.builtin.systemd:
+            name: node_exporter
+            state: started
+
+      - name: Enable Node Exporter service at boot
+        ansible.builtin.systemd:
+            name: node_exporter
+            enabled: yes
