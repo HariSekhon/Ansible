@@ -4,7 +4,7 @@
 #
 #  vim:ts=4:sts=4:sw=4:noet
 #
-#  https://github.com/HariSekhon/Template-Repo
+#  https://github.com/HariSekhon/Ansible
 #
 #  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
 #
@@ -20,15 +20,15 @@
 #
 # Alpine:
 #
-#   apk add --no-cache git make && git clone https://github.com/HariSekhon/Template-repo repo && cd repo && make
+#   apk add --no-cache git make && git clone https://github.com/HariSekhon/Ansible repo && cd repo && make
 #
 # Debian / Ubuntu:
 #
-#   apt-get update && apt-get install -y make git && git clone https://github.com/HariSekhon/Template-repo repo && cd repo && make
+#   apt-get update && apt-get install -y make git && git clone https://github.com/HariSekhon/Ansible repo && cd repo && make
 #
 # RHEL / CentOS:
 #
-#   yum install -y make git && git clone https://github.com/HariSekhon/Template-repo repo && cd repo && make
+#   yum install -y make git && git clone https://github.com/HariSekhon/Ansible repo && cd repo && make
 
 # ===================
 
@@ -36,14 +36,14 @@ ifneq ("$(wildcard bash-tools/Makefile.in)", "")
 	include bash-tools/Makefile.in
 endif
 
-REPO := HariSekhon/Template-Repo
+REPO := HariSekhon/Ansible
 
 CODE_FILES := $(shell git ls-files | grep -E -e '\.sh$$' -e '\.py$$' | sort)
 
 .PHONY: build
 build: init
 	@echo ================
-	@echo Template-repo Builds
+	@echo Ansible Builds
 	@echo ================
 	@$(MAKE) git-summary
 	@echo
@@ -74,7 +74,7 @@ python:
 	@echo
 	$(MAKE) pycompile
 	@echo
-	@echo 'BUILD SUCCESSFUL (Template-Repo)'
+	@echo 'BUILD SUCCESSFUL (Ansible)'
 
 .PHONY: test
 test:
