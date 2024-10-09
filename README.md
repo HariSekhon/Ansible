@@ -73,7 +73,7 @@ the [HariSekhon/Knowledge-Base](https://github.com/HariSekhon/Knowledge-Base) re
 ## Ansible Playbooks
 
 Quickly install to a given host using `-i <hostname>,` with the trailing comma
-to let Ansible know it is an inline host list not an [ansible-inventory.txt](ansible-inventory.txt) file.
+to let Ansible know it is an inline host list not an [ansible-inventory.ini](ansible-inventory.ini) file.
 
 ### Check Diff, Then Run
 
@@ -81,13 +81,13 @@ Find a playbook you want, then run a dry run `--check --diff` to see what it wou
 check your SSH config is set up with the right AWS pem keys etc:
 
 ```shell
-ansible-playbook -i inventory.txt path/to/playbook.yml --check --diff
+ansible-playbook -i inventory.ini path/to/playbook.yml --check --diff
 ```
 
 If it look ok, then run it:
 
 ```shell
-ansible-playbook -i inventory.txt path/to/playbook.yml --check --diff
+ansible-playbook -i inventory.ini path/to/playbook.yml --check --diff
 ```
 
 ### Install Prometheus
