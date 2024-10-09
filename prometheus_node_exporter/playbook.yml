@@ -21,62 +21,62 @@
 - hosts: all
   become: yes
   vars:
-      node_exporter_version: "{{ node_exporter_version_param | default(latest_version) }}"
+    node_exporter_version: "{{ node_exporter_version_param | default(latest_version) }}"
 
   tasks:
-      - name: Get the latest version of Node Exporter from GitHub
-        uri:
-            url: https://api.github.com/repos/prometheus/node_exporter/releases/latest
-            return_content: yes
-        register: github_release
+    - name: Get the latest version of Node Exporter from GitHub
+      uri:
+        url: https://api.github.com/repos/prometheus/node_exporter/releases/latest
+        return_content: yes
+      register: github_release
 
-      - name: Check if latest_release has valid content
-        assert:
-          that:
-            - latest_release is defined
-            - latest_release.json is defined
-            - latest_release.json.tag_name is defined
-          fail_msg: "Failed to fetch latest release data or the expected structure is not found"
+    - name: Check if latest_release has valid content
+      assert:
+        that:
+          - latest_release is defined
+          - latest_release.json is defined
+          - latest_release.json.tag_name is defined
+        fail_msg: "Failed to fetch latest release data or the expected structure is not found"
 
-      - name: Set the latest version
-        set_fact:
-            latest_version: "{{ github_release.json.tag_name | regex_replace('^v', '') }}"
-        when: latest_release.status == 200
+    - name: Set the latest version
+      set_fact:
+        latest_version: "{{ github_release.json.tag_name | regex_replace('^v', '') }}"
+      when: latest_release.status == 200
 
-      - name: Download Prometheus Node Exporter
-        get_url:
-            url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
-            dest: /tmp/node_exporter.tar.gz
+    - name: Download Prometheus Node Exporter
+      get_url:
+        url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+        dest: /tmp/node_exporter.tar.gz
 
-      - name: Extract Node Exporter to /tmp
-        unarchive:
-            src: /tmp/node_exporter.tar.gz
-            dest: /tmp/
-            remote_src: yes
-            creates: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64"
+    - name: Extract Node Exporter to /tmp
+      unarchive:
+        src: /tmp/node_exporter.tar.gz
+        dest: /tmp/
+        remote_src: yes
+        creates: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64"
 
-      - name: Copy node_exporter binary to /usr/local/bin
-        copy:
-            src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter"
-            dest: "/usr/local/bin/node_exporter"
-            mode: '0755'
+    - name: Copy node_exporter binary to /usr/local/bin
+      copy:
+        src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter"
+        dest: "/usr/local/bin/node_exporter"
+        mode: '0755'
 
-      - name: Copy node_exporter.service to the remote server
-        copy:
-            src: ./node_exporter.service
-            dest: /etc/systemd/system/node_exporter.service
-            mode: '0644'
+    - name: Copy node_exporter.service to the remote server
+      copy:
+        src: ./node_exporter.service
+        dest: /etc/systemd/system/node_exporter.service
+        mode: '0644'
 
-      - name: Reload systemd
-        systemd:
-            daemon_reload: yes
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
 
-      - name: Start the Node Exporter service
-        systemd:
-            name: node_exporter
-            state: started
+    - name: Start the Node Exporter service
+      systemd:
+        name: node_exporter
+        state: started
 
-      - name: Enable Node Exporter service at boot
-        systemd:
-            name: node_exporter
-            enabled: yes
+    - name: Enable Node Exporter service at boot
+      systemd:
+        name: node_exporter
+        enabled: yes
