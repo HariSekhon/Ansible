@@ -25,49 +25,50 @@
 
   tasks:
       - name: Get the latest version of Node Exporter from GitHub
-        ansible.builtin.uri:
+        uri:
             url: https://api.github.com/repos/prometheus/node_exporter/releases/latest
             return_content: yes
         register: github_release
 
       - name: Set the latest version
-        ansible.builtin.set_fact:
+        set_fact:
             latest_version: "{{ github_release.json.tag_name | regex_replace('^v', '') }}"
+        when: latest_release.status == 200
 
       - name: Download Prometheus Node Exporter
-        ansible.builtin.get_url:
+        get_url:
             url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
             dest: /tmp/node_exporter.tar.gz
 
       - name: Extract Node Exporter to /tmp
-        ansible.builtin.unarchive:
+        unarchive:
             src: /tmp/node_exporter.tar.gz
             dest: /tmp/
             remote_src: yes
             creates: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64"
 
       - name: Copy node_exporter binary to /usr/local/bin
-        ansible.builtin.copy:
+        copy:
             src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter"
             dest: "/usr/local/bin/node_exporter"
             mode: '0755'
 
       - name: Copy node_exporter.service to the remote server
-        ansible.builtin.copy:
+        copy:
             src: ./node_exporter.service
             dest: /etc/systemd/system/node_exporter.service
             mode: '0644'
 
       - name: Reload systemd
-        ansible.builtin.systemd:
+        systemd:
             daemon_reload: yes
 
       - name: Start the Node Exporter service
-        ansible.builtin.systemd:
+        systemd:
             name: node_exporter
             state: started
 
       - name: Enable Node Exporter service at boot
-        ansible.builtin.systemd:
+        systemd:
             name: node_exporter
             enabled: yes
