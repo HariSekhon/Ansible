@@ -73,7 +73,7 @@ the [HariSekhon/Knowledge-Base](https://github.com/HariSekhon/Knowledge-Base) re
 ## Ansible Playbooks
 
 Quickly install to a given host using `-i <hostname>,` with the trailing comma
-to let Ansible know it is an inline host list not an [ansible-inventory.ini](ansible-inventory.ini) file.
+to let Ansible know it is an inline host list not an [inventory.ini](inventory.ini) file.
 
 ### Check Diff, Then Run
 
