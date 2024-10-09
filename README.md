@@ -80,6 +80,9 @@ A template of a quick easy static Ansible inventory is here:
 
 [inventory.ini](inventory.ini)
 
+More advanced dynamic inventories that populate by querying things like cloud providers can be used via
+[plugins](https://docs.ansible.com/ansible/latest/plugins/inventory.html).
+
 ## Ansible Playbooks
 
 Quickly install to a given host using `-i <hostname>,` with the trailing comma
