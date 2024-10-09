@@ -74,13 +74,15 @@ the [HariSekhon/Knowledge-Base](https://github.com/HariSekhon/Knowledge-Base) re
 ### Install Prometheus
 
 ```shell
-ansible -i localhost, prometheus/prometheus.yml
+ansible-playbook -i localhost, prometheus/prometheus.yml
 ```
 
 ### Install Node Exporter
 
 ```shell
-ansible -i localhost, prometheus_node_exporter/node_exporter.yml
+
+```shell
+ansible-playbook -i localhost, prometheus_node_exporter/node_exporter.yml
 ```
 
 ## More Core Repos
