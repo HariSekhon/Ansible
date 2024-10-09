@@ -52,6 +52,7 @@
 <!-- INDEX_START -->
 
 - [Quick Ansible Doc](#quick-ansible-doc)
+- [Ansible Inventory](#ansible-inventory)
 - [Ansible Playbooks](#ansible-playbooks)
   - [Check Diff, Then Run](#check-diff-then-run)
   - [Install Prometheus](#install-prometheus)
@@ -72,6 +73,12 @@
 
 See the [Ansible](https://github.com/HariSekhon/Knowledge-Base/blob/main/ansible.md) page in
 the [HariSekhon/Knowledge-Base](https://github.com/HariSekhon/Knowledge-Base) repo.
+
+## Ansible Inventory
+
+A template of a quick easy static Ansible inventory is here:
+
+[inventory.ini](inventory.ini)
 
 ## Ansible Playbooks
 
