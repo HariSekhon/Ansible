@@ -18,56 +18,60 @@
 # ============================================================================ #
 
 ---
-- hosts: all
+- name: Install Prometheus
+  hosts: all
   become: yes
   vars:
-      prometheus_version: "{{ prometheus_version_param | default(latest_version) }}"
+      prometheus_version: "latest"  # Set to "latest" or specify a version
+      prometheus_bin: "/usr/local/bin/prometheus"
+      prometheus_config: "/etc/prometheus.yml"
+      prometheus_service: "/etc/systemd/system/prometheus.service"
 
   tasks:
-      - name: Get the latest version of Prometheus from GitHub
-        ansible.builtin.uri:
-            url: https://api.github.com/repos/prometheus/prometheus/releases/latest
+      - name: Determine latest Prometheus version if not specified
+        uri:
+            url: "https://api.github.com/repos/prometheus/prometheus/releases/latest"
+            method: GET
             return_content: yes
-        register: github_release
+        register: latest_release
+        when: prometheus_version == "latest"
 
-      - name: Set the latest version
-        ansible.builtin.set_fact:
-            latest_version: "{{ github_release.json.tag_name | regex_replace('^v', '') }}"
+      - name: Set version variable
+        set_fact:
+            prometheus_version: "{{ latest_release.json.tag_name }}"
+        when: prometheus_version == "latest"
 
-      - name: Download Prometheus binary tarball
-        ansible.builtin.get_url:
-            url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+      - name: Download Prometheus
+        get_url:
+            url: "https://github.com/prometheus/prometheus/releases/download/{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
             dest: /tmp/prometheus.tar.gz
 
-      - name: Extract Prometheus to /tmp
-        ansible.builtin.unarchive:
+      - name: Unpack Prometheus tarball
+        unarchive:
             src: /tmp/prometheus.tar.gz
             dest: /tmp/
             remote_src: yes
-            creates: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64"
 
       - name: Copy Prometheus binary to /usr/local/bin
-        ansible.builtin.copy:
-            src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus"
-            dest: "/usr/local/bin/prometheus"
+        copy:
+            src: "/tmp/prometheus-{{ prometheus_version }}/prometheus"
+            dest: "{{ prometheus_bin }}"
             mode: '0755'
 
-      - name: Copy existing Prometheus service file
-        ansible.builtin.copy:
-            src: "{{ playbook_dir }}/prometheus.service"
-            dest: /etc/systemd/system/prometheus.service
+      - name: Copy Prometheus configuration file
+        copy:
+            src: "{{ playbook_dir }}/prometheus.yml"
+            dest: "{{ prometheus_config }}"
             mode: '0644'
 
-      - name: Reload systemd
-        ansible.builtin.systemd:
-            daemon_reload: yes
+      - name: Copy Prometheus service file
+        copy:
+            src: "{{ playbook_dir }}/prometheus.service"
+            dest: "{{ prometheus_service }}"
+            mode: '0644'
 
-      - name: Start Prometheus service
-        ansible.builtin.systemd:
+      - name: Start and enable Prometheus service
+        systemd:
             name: prometheus
             state: started
-
-      - name: Enable Prometheus service at boot
-        ansible.builtin.systemd:
-            name: prometheus
             enabled: yes
