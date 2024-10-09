@@ -77,13 +77,13 @@ to let Ansible know it is an inline host list not an [ansible-inventory.txt](ans
 ### Install Prometheus
 
 ```shell
-ansible-playbook -i localhost, prometheus/prometheus_playbook.yml
+ansible-playbook -i localhost, prometheus/playbook.yml
 ```
 
 ### Install Node Exporter
 
 ```shell
-ansible-playbook -i localhost, prometheus_node_exporter/node_exporter_playbook.yml
+ansible-playbook -i localhost, prometheus_node_exporter/playbook.yml
 ```
 
 ## More Core Repos
