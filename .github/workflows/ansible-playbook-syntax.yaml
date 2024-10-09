@@ -27,14 +27,14 @@ on:
       - main
     paths:
       - '**/playbook.y*ml'
-      - .github/workflows/ansible_playbook_syntax_check.yaml
+      - .github/workflows/ansible-playbook-syntax.yaml
   pull_request:
     branches:
       - master
       - main
     paths:
       - '**/playbook.y*ml'
-      - .github/workflows/ansible_playbook_syntax_check.yaml
+      - .github/workflows/ansible-playbook-syntax.yaml
   workflow_dispatch:
     inputs:
       debug:
