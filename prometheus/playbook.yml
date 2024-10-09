@@ -36,6 +36,14 @@
         register: latest_release
         when: prometheus_version == "latest"
 
+      - name: Check if latest_release has valid content
+        assert:
+            that:
+                - latest_release is defined
+                - latest_release.json is defined
+                - latest_release.json.tag_name is defined
+            fail_msg: "Failed to fetch latest release data or the expected structure is not found"
+
       - name: Set version variable
         set_fact:
             prometheus_version: "{{ latest_release.json.tag_name }}"
