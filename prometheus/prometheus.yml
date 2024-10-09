@@ -28,7 +28,7 @@
       prometheus_service: "/etc/systemd/system/prometheus.service"
 
   tasks:
-      - name: Determine latest Prometheus version if not specified
+      - name: Determine latest Prometheus version from GitHub releases if not specified
         uri:
             url: "https://api.github.com/repos/prometheus/prometheus/releases/latest"
             method: GET
