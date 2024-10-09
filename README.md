@@ -71,6 +71,9 @@ the [HariSekhon/Knowledge-Base](https://github.com/HariSekhon/Knowledge-Base) re
 
 ## Ansible Playbooks
 
+Quickly install to a given host using `-i <hostname>,` with the trailing comma
+to let Ansible know it is an inline host list not an [ansible-inventory.txt](ansible-inventory.txt) file.
+
 ### Install Prometheus
 
 ```shell
