@@ -87,7 +87,7 @@ ansible-playbook -i inventory.ini path/to/playbook.yml --check --diff
 If it look ok, then run it:
 
 ```shell
-ansible-playbook -i inventory.ini path/to/playbook.yml --check --diff
+ansible-playbook -i inventory.ini path/to/playbook.yml
 ```
 
 ### Install Prometheus
