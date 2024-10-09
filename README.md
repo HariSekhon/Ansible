@@ -80,8 +80,6 @@ ansible-playbook -i localhost, prometheus/prometheus.yml
 ### Install Node Exporter
 
 ```shell
-
-```shell
 ansible-playbook -i localhost, prometheus_node_exporter/node_exporter.yml
 ```
 
