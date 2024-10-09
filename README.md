@@ -46,9 +46,42 @@
 [![SonarCloud](https://github.com/HariSekhon/Ansible/actions/workflows/sonarcloud.yaml/badge.svg)](https://github.com/HariSekhon/Ansible/actions/workflows/sonarcloud.yaml)
 [![Trivy](https://github.com/HariSekhon/Ansible/actions/workflows/trivy.yaml/badge.svg)](https://github.com/HariSekhon/Ansible/actions/workflows/trivy.yaml)
 
+<!-- INDEX_START -->
+
+- [Quick Ansible Doc](#quick-ansible-doc)
+- [Ansible Playbooks](#ansible-playbooks)
+  - [Install Prometheus](#install-prometheus)
+  - [Install Node Exporter](#install-node-exporter)
+- [More Core Repos](#more-core-repos)
+  - [Knowledge](#knowledge)
+  - [DevOps Code](#devops-code)
+  - [Containerization](#containerization)
+  - [CI/CD](#cicd)
+  - [DBA - SQL](#dba---sql)
+  - [DevOps Reloaded](#devops-reloaded)
+  - [Templates](#templates)
+  - [Misc](#misc)
+
+<!-- INDEX_END -->
+
+## Quick Ansible Doc
+
+See the [Ansible](https://github.com/HariSekhon/Knowledge-Base/blob/main/ansible.md) page in
+the [HariSekhon/Knowledge-Base](https://github.com/HariSekhon/Knowledge-Base) repo.
+
 ## Ansible Playbooks
 
+### Install Prometheus
 
+```shell
+ansible -i localhost, prometheus/prometheus.yml
+```
+
+### Install Node Exporter
+
+```shell
+ansible -i localhost, prometheus_node_exporter/node_exporter.yml
+```
 
 ## More Core Repos
 
