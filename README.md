@@ -46,6 +46,7 @@
 [![Semgrep Cloud](https://github.com/HariSekhon/Ansible/actions/workflows/semgrep-cloud.yaml/badge.svg)](https://github.com/HariSekhon/Ansible/actions/workflows/semgrep-cloud.yaml)
 [![SonarCloud](https://github.com/HariSekhon/Ansible/actions/workflows/sonarcloud.yaml/badge.svg)](https://github.com/HariSekhon/Ansible/actions/workflows/sonarcloud.yaml)
 [![Trivy](https://github.com/HariSekhon/Ansible/actions/workflows/trivy.yaml/badge.svg)](https://github.com/HariSekhon/Ansible/actions/workflows/trivy.yaml)
+[![YAML](https://github.com/HariSekhon/Ansible/actions/workflows/yaml.yaml/badge.svg)](https://github.com/HariSekhon/Ansible/actions/workflows/yaml.yaml)
 
 <!-- INDEX_START -->
 
